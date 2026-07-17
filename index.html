@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- SEO Optimization -->
+    <title>UTM Sports Hall 2 - Interactive 3D Campus Tour</title>
+    <meta name="description" content="Take an interactive 3D virtual tour of Sports Hall 2 at Universiti Teknologi Malaysia (UTM). Walk through the hall, explore interactive hotspots, and experience the campus in real-time 3D." />
+    
+    <!-- Google Fonts for Premium Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Favicon link (Optional placeholder) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+  </head>
+  <body>
+    <!-- Three.js Canvas Container -->
+    <div id="canvas-container"></div>
+
+    <!-- Loading Screen (Displayed during GLB model loading) -->
+    <div id="loading-screen" class="overlay-screen">
+      <div class="loader-content">
+        <div class="utm-logo-placeholder">UTM</div>
+        <h2 id="loading-title">Loading 3D Campus Tour...</h2>
+        <p id="loading-status">Connecting to server</p>
+        <div class="progress-bar-container">
+          <div id="progress-bar" style="width: 0%"></div>
+        </div>
+        <p id="progress-percentage">0%</p>
+      </div>
+    </div>
+
+    <!-- Welcome / Start Screen (Displayed after loading completes) -->
+    <div id="welcome-screen" class="overlay-screen hidden">
+      <div class="welcome-card">
+        <div class="utm-header-accent"></div>
+        <h1 class="project-title">UTM SPORTS HALL 2</h1>
+        <p class="project-subtitle">Interactive 3D Campus Tour</p>
+        
+        <div class="instructions-section">
+          <h3>HOW TO EXPLORE</h3>
+          <div class="controls-guide">
+            <div class="control-item">
+              <span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span>
+              <span class="label">Walk / Slide Camera (Forward/Back/Left/Right)</span>
+            </div>
+            <div class="control-item">
+              <span class="touch-icon">🖱️ Left Drag</span>
+              <span class="label">Look / Pan Around (Hold left mouse button and drag)</span>
+            </div>
+            <div class="control-item">
+              <span class="touch-icon">🖱️ Scroll</span>
+              <span class="label">Zoom In / Out</span>
+            </div>
+            <div class="control-item">
+              <span class="click-icon">🖱️ Click</span>
+              <span class="label">Select glowing hotspots and light switches</span>
+            </div>
+          </div>
+        </div>
+
+        <button id="btn-start" class="btn-primary">START TOUR</button>
+        <div class="utm-footer-note">SECV3263 Multimedia Web Programming</div>
+      </div>
+    </div>
+
+    <!-- Persistent HUD Overlay during tour -->
+    <div id="hud-overlay" class="hud-container hidden">
+      <!-- Top Left: Campus Guide & Hotspots checklist -->
+      <div class="hud-card hud-top-left">
+        <div class="hud-header">
+          <h3>CAMPUS TOUR HUD</h3>
+        </div>
+        <div class="hud-body">
+          <div class="guide-checklist">
+            <h4>Tour Checklist:</h4>
+            <ul>
+              <li id="chk-explore" class="checked">Explore Sports Hall 2</li>
+              <li id="chk-light">Toggle the Campus Lights</li>
+              <li id="chk-hotspots">Find UTM Hotspot Points</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Right: Object Inspector (highly useful for user debugging) -->
+      <div id="hud-inspector" class="hud-card hud-top-right">
+        <div class="hud-header">
+          <h3>INSPECTOR MODE</h3>
+        </div>
+        <div class="hud-body">
+          <p>Hovering over: <span id="hovered-object-name" class="highlight-val">None</span></p>
+          <p>Last clicked: <span id="clicked-object-name" class="highlight-val">None</span></p>
+          <p class="inspector-hint">Click a mesh to view details or check developer console for exact mesh names!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide-in Information Panel for click events -->
+    <div id="info-panel" class="info-panel-container hidden">
+      <div class="info-panel-content">
+        <button id="info-close" class="btn-close" aria-label="Close details">&times;</button>
+        <div class="info-header-glow"></div>
+        <div class="info-body">
+          <div class="info-tag">UTM CAMPUS FEATURE</div>
+          <h2 id="info-title">Location Name</h2>
+          <hr class="info-divider" />
+          <p id="info-desc">Description of this campus location...</p>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

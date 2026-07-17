@@ -1,0 +1,575 @@
+/* ==========================================================================
+   UTM Interactive 3D Campus Tour Style Sheet
+   Branding: UTM Maroon (#8A1538) & UTM Gold (#F1A400 / #D4AF37)
+   Theme: Sleek Dark / Glassmorphism
+   ========================================================================== */
+
+/* --- Reset & Fonts --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #0b0b0b;
+  font-family: 'Outfit', 'Montserrat', sans-serif;
+  color: #f5f5f5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Canvas Container --- */
+#canvas-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* --- HUD Crosshair --- */
+#hud-crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  pointer-events: none;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+#hud-crosshair.active {
+  background-color: #F1A400;
+  transform: translate(-50%, -50%) scale(1.5);
+}
+
+/* --- Helper Utilities --- */
+.hidden {
+  display: none !important;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* --- Overlay Screen Base --- */
+.overlay-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0f0c1b 0%, #170d14 100%);
+  transition: opacity 0.5s ease;
+  padding: 20px;
+}
+
+/* --- Loading Screen Styles --- */
+.loader-content {
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.utm-logo-placeholder {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: 5px;
+  color: #8A1538;
+  text-shadow: 0 0 15px rgba(138, 21, 56, 0.6);
+  margin-bottom: 10px;
+  animation: pulseLogo 2s infinite ease-in-out;
+}
+
+@keyframes pulseLogo {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; text-shadow: 0 0 25px rgba(241, 164, 0, 0.8); color: #F1A400; }
+}
+
+#loading-title {
+  font-weight: 600;
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+#loading-status {
+  font-size: 0.9rem;
+  color: #aaa;
+  margin-bottom: 25px;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 6px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #8A1538 0%, #F1A400 100%);
+  box-shadow: 0 0 10px rgba(241, 164, 0, 0.5);
+  border-radius: 3px;
+  transition: width 0.15s ease-out;
+}
+
+#progress-percentage {
+  font-weight: 600;
+  color: #F1A400;
+}
+
+/* --- Welcome / Start Screen Styles --- */
+.welcome-card {
+  background: rgba(18, 14, 20, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(138, 21, 56, 0.2);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 580px;
+  padding: 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(15px);
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  0% { transform: translateY(40px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.utm-header-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, #8A1538 0%, #F1A400 50%, #8A1538 100%);
+}
+
+.project-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #ffffff;
+  margin-top: 10px;
+}
+
+.project-subtitle {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #F1A400;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+}
+
+.instructions-section {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.instructions-section h3 {
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  color: #F1A400;
+  margin-bottom: 15px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.controls-guide {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.control-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.control-item .key {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 0 rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  min-width: 28px;
+  text-align: center;
+}
+
+.control-item .mouse-icon, .control-item .click-icon, .control-item .touch-icon {
+  font-size: 1.1rem;
+  min-width: 28px;
+  text-align: center;
+}
+
+.control-item .label {
+  font-size: 0.9rem;
+  color: #ddd;
+}
+
+/* --- Buttons --- */
+.btn-primary {
+  background: linear-gradient(135deg, #8A1538 0%, #a61c46 100%);
+  color: #fff;
+  border: none;
+  outline: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 14px 40px;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(138, 21, 56, 0.4);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(138, 21, 56, 0.6), 0 0 15px rgba(241, 164, 0, 0.4);
+  background: linear-gradient(135deg, #a61c46 0%, #8A1538 100%);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+  box-shadow: 0 3px 10px rgba(138, 21, 56, 0.4);
+}
+
+.utm-footer-note {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 25px;
+  letter-spacing: 1px;
+}
+
+/* --- Pause Screen Card --- */
+.re-entry-card {
+  background: rgba(18, 14, 20, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  max-width: 360px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.re-entry-card h2 {
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.re-entry-card p {
+  color: #ccc;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+
+/* --- HUD overlay during active tour --- */
+.hud-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.hud-card {
+  position: absolute;
+  background: rgba(15, 10, 15, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  color: #fff;
+  pointer-events: auto;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.hud-header {
+  background: rgba(138, 21, 56, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 8px 12px;
+  border-top-left-radius: 9px;
+  border-top-right-radius: 9px;
+}
+
+.hud-header h3 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #F1A400;
+}
+
+.hud-body {
+  padding: 12px;
+}
+
+.hud-top-left {
+  top: 20px;
+  left: 20px;
+  width: 260px;
+}
+
+.hud-nav-instruction {
+  font-size: 0.75rem;
+  color: #bbb;
+  margin-bottom: 12px;
+}
+
+.guide-checklist h4 {
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.guide-checklist ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.guide-checklist li {
+  font-size: 0.75rem;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.guide-checklist li::before {
+  content: "☐";
+  color: #8A1538;
+  font-weight: bold;
+}
+
+.guide-checklist li.checked {
+  color: #ddd;
+  text-decoration: line-through rgba(241, 164, 0, 0.5);
+}
+
+.guide-checklist li.checked::before {
+  content: "☑";
+  color: #F1A400;
+}
+
+.hud-top-right {
+  top: 20px;
+  right: 20px;
+  width: 250px;
+}
+
+.hud-top-right p {
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+  color: #ccc;
+}
+
+.highlight-val {
+  font-weight: 600;
+  color: #F1A400;
+}
+
+.inspector-hint {
+  font-size: 0.7rem !important;
+  color: #777 !important;
+  line-height: 1.3;
+  margin-top: 5px;
+}
+
+/* --- Slide-in Info Panel --- */
+.info-panel-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 380px;
+  height: 100%;
+  z-index: 8;
+  pointer-events: none; /* Let canvas receive clicks outside */
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.info-panel-container.hidden {
+  transform: translateX(100%);
+  display: block !important; /* Keep container rendering, rely on transform */
+}
+
+.info-panel-content {
+  height: 100%;
+  width: 100%;
+  background: rgba(18, 10, 15, 0.88);
+  border-left: 2px solid rgba(138, 21, 56, 0.4);
+  box-shadow: -10px 0 35px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(15px);
+  pointer-events: auto; /* Catch events on the panel itself */
+  padding: 40px 30px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-header-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #8A1538, #F1A400);
+}
+
+.btn-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  color: #aaa;
+  font-size: 2rem;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.btn-close:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.info-body {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-tag {
+  align-self: flex-start;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(241, 164, 0, 0.15);
+  border: 1px solid rgba(241, 164, 0, 0.3);
+  color: #F1A400;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+#info-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.info-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(138, 21, 56, 0.5) 0%, rgba(241, 164, 0, 0.5) 50%, transparent 100%);
+  margin: 15px 0 20px 0;
+}
+
+#info-desc {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #ccc;
+}
+
+/* --- Touch Screen Device Rules --- */
+.mobile-only {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .desktop-only {
+    display: none;
+  }
+  .mobile-only {
+    display: flex;
+  }
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+  .welcome-card {
+    padding: 25px;
+    max-width: 100%;
+  }
+  .project-title {
+    font-size: 1.7rem;
+  }
+  
+  .hud-top-left {
+    top: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
+    max-height: 120px;
+    overflow-y: auto;
+  }
+  .hud-top-right {
+    display: none; /* Hide inspector on small mobile screens */
+  }
+
+  .info-panel-container {
+    width: 100%;
+    height: 40%;
+    top: auto;
+    bottom: 0;
+    right: 0;
+    border-left: none;
+  }
+
+  .info-panel-container.hidden {
+    transform: translateY(100%);
+  }
+
+  .info-panel-content {
+    border-top: 2px solid rgba(138, 21, 56, 0.4);
+    padding: 25px 20px;
+  }
+
+  #info-title {
+    font-size: 1.4rem;
+  }
+}
